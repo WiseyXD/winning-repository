@@ -60,4 +60,77 @@ adminRouter.get("/tests", async (c, next) => {
     }
 });
 
+adminRouter.post("/tests/create", async (c, next) => {
+    const { email, id, role } = c.get("jwtPayload");
+
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env?.DATABASE_URL,
+    }).$extends(withAccelerate());
+    try {
+        const body = await c.req.json();
+        const quiz = await prisma.quiz.create({
+            data: {
+                title: body.title,
+                description: body.description,
+                creatorId: id,
+            },
+        });
+
+        // Create questions and options for the quiz
+        const createdQuestions = await Promise.all(
+            body.questions.map(async (question: any) => {
+                const { text, options } = question;
+                // Create the question and associate it with the quiz
+                const createdQuestion = await prisma.question.create({
+                    data: {
+                        text: text,
+                        quiz: { connect: { id: quiz.id } },
+                    },
+                });
+
+                // Create options for the question
+                const createdOptions = await prisma.option.createMany({
+                    data: options.map((option: any) => ({
+                        text: option.text,
+                        right: option.right,
+                        questionId: createdQuestion.id,
+                    })),
+                });
+
+                return createdQuestion;
+            })
+        );
+
+        return c.json({ msg: "success", quiz, createdQuestions }, 201);
+    } catch (error: any) {
+        const message = error.message;
+        return c.json({ msg: "fails", message }, 500);
+    }
+});
+
+adminRouter.delete("/tests/delete/:quizId", async (c, next) => {
+    const { email, id, role } = c.get("jwtPayload");
+
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env?.DATABASE_URL,
+    }).$extends(withAccelerate());
+    try {
+        const quizId = c.req.param("quizId");
+
+        const quiz = await prisma.quiz.delete({
+            where: {
+                id: quizId,
+            },
+        });
+
+        await prisma.option.deleteMany();
+        await prisma.quiz.deleteMany();
+
+        return c.json({ msg: "success", quiz }, 200);
+    } catch (error: any) {
+        const message = error.message;
+        return c.json({ msg: "fails", message }, 500);
+    }
+});
+
 export default adminRouter;

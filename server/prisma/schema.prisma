@@ -42,7 +42,6 @@ model Question {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId// You can customize this ID field according to your needs
   text        String
   options     Option[]  // Array of options for the question
-  correctOptionId String  // ID of the correct option
   quiz        Quiz      @relation(fields: [quizId], references: [id])
   quizId      String    @db.ObjectId
 }
@@ -51,6 +50,7 @@ model Question {
 model Option {
   id       String   @id @default(auto()) @map("_id") @db.ObjectId // You can customize this ID field according to your needs
   text     String
+  right    Boolean @default(false)
   question Question @relation(fields: [questionId], references: [id])
   questionId String @db.ObjectId
 }
