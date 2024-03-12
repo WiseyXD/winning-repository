@@ -12,6 +12,7 @@ type TUserData = {
 const studentRouter = new Hono<{
     Bindings: {
         JWT_SECRET: string;
+        DATABASE_URL: string;
     };
 }>();
 
@@ -41,6 +42,40 @@ studentRouter.use("/*", async (c, next) => {
 
 studentRouter.get("/tests", async (c, next) => {
     const { email, id, role } = c.get("jwtPayload");
+    try {
+        const prisma = new PrismaClient({
+            datasourceUrl: c.env?.DATABASE_URL,
+        }).$extends(withAccelerate());
+        const tests = await prisma.quiz.findMany();
+        return c.json({ msg: "success", tests }, 200);
+    } catch (error: any) {
+        const message = error.message;
+        return c.json({ msg: "fails", message }, 500);
+    }
+});
+
+studentRouter.get("/tests/:quizId", async (c, next) => {
+    const { email, id, role } = c.get("jwtPayload");
+    const quizId = c.req.param("quizId");
+    try {
+        const prisma = new PrismaClient({
+            datasourceUrl: c.env?.DATABASE_URL,
+        }).$extends(withAccelerate());
+        const test = await prisma.quiz.findFirst({
+            where: { id: quizId },
+            include: {
+                questions: {
+                    include: {
+                        options: true, // Include all options for each question
+                    },
+                },
+            },
+        });
+        return c.json({ msg: "success", test }, 200);
+    } catch (error: any) {
+        const message = error.message;
+        return c.json({ msg: "fails", message }, 500);
+    }
 });
 
 export default studentRouter;
