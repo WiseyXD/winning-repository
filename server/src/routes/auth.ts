@@ -26,7 +26,7 @@ auth.post("/student/signup", async (c) => {
             },
         });
         const token = await sign(
-            { role: user.role, email: user.email },
+            { role: user.role, email: user.email, id: user.id },
             c.env.JWT_SECRET
         );
 
@@ -51,7 +51,7 @@ auth.post("/admin/signup", async (c) => {
             },
         });
         const token = await sign(
-            { role: user.role, email: user.email },
+            { role: user.role, email: user.email, id: user.id },
             c.env.JWT_SECRET
         );
         return c.json({ msg: "success", token }, 201);
@@ -76,7 +76,7 @@ auth.post("/student/login", async (c) => {
         });
         if (user == null) throw Error("User does not exist in DB");
         const token = await sign(
-            { role: user.role, email: user.email },
+            { role: user.role, email: user.email, id: user.id },
             c.env.JWT_SECRET
         );
 
@@ -102,7 +102,7 @@ auth.post("/admin/login", async (c) => {
         });
         if (user == null) throw Error("User does not exist in DB");
         const token = await sign(
-            { role: user.role, email: user.email },
+            { role: user.role, email: user.email, id: user.id },
             c.env.JWT_SECRET
         );
 

@@ -4,6 +4,7 @@ import { withAccelerate } from "@prisma/extension-accelerate";
 import { env } from "hono/adapter";
 
 import auth from "./routes/auth";
+import studentRouter from "./routes/studentRoutes";
 
 const app = new Hono();
 
@@ -12,6 +13,6 @@ export interface Env {
 }
 
 app.route("/auth", auth);
-app.route("");
+app.route("/student", studentRouter);
 
 export default app;
