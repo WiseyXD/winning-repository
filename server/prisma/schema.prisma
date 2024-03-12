@@ -19,9 +19,38 @@ model User {
   email  String @unique
   password String
   role UserRole
+  quizs Quiz[] 
 }
 
 enum UserRole {
   Student
   Admin
+}
+
+// Define the Quiz model
+model Quiz {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId // You can customize this ID field according to your needs
+  title       String
+  description String
+  creator     User      @relation(fields: [creatorId], references: [id])
+  creatorId   String   @db.ObjectId
+  questions   Question[]
+}
+
+// Define the Question model
+model Question {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId// You can customize this ID field according to your needs
+  text        String
+  options     Option[]  // Array of options for the question
+  correctOptionId String  // ID of the correct option
+  quiz        Quiz      @relation(fields: [quizId], references: [id])
+  quizId      String    @db.ObjectId
+}
+
+// Define the Option model
+model Option {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId // You can customize this ID field according to your needs
+  text     String
+  question Question @relation(fields: [questionId], references: [id])
+  questionId String @db.ObjectId
 }
