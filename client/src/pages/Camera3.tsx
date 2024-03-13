@@ -36,6 +36,7 @@ const VideoStream = () => {
         return () => {
             // @ts-ignore
             clearInterval(captureFrameInterval.current);
+            socket?.off();
         };
     }, []);
 
