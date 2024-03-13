@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client/edge";
 
 import { Hono } from "hono";
 import { verify } from "hono/jwt";
+import { testSchema } from "@wiseyxd/winning-project-common";
 
 type TUserData = {
     role: "Student" | "Admin";
@@ -60,6 +61,8 @@ adminRouter.get("/tests", async (c, next) => {
     }
 });
 
+// Duration Test
+
 adminRouter.post("/tests/create", async (c, next) => {
     const { email, id, role } = c.get("jwtPayload");
 
@@ -68,10 +71,17 @@ adminRouter.post("/tests/create", async (c, next) => {
     }).$extends(withAccelerate());
     try {
         const body = await c.req.json();
+        const { success, error }: any = testSchema.safeParse(body);
+        if (!success) {
+            const message = error.message;
+            return c.json({ msg: "fails", message }, 500);
+        }
         const quiz = await prisma.quiz.create({
             data: {
                 title: body.title,
                 description: body.description,
+                duration: body.duration,
+                validityDate: body.validityDate,
                 creatorId: id,
             },
         });

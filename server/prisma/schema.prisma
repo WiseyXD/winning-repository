@@ -32,6 +32,8 @@ model Quiz {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId // You can customize this ID field according to your needs
   title       String
   description String
+  validityDate DateTime
+  duration Int
   creator     User      @relation(fields: [creatorId], references: [id])
   creatorId   String   @db.ObjectId
   questions   Question[]
