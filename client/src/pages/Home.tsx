@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectSocket, setSocket } from "../features/socket/socketSlice";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 // TESTS
 
@@ -50,7 +51,7 @@ export default function Home() {
                 value={room}
                 onChange={(e) => setRoom(e.target.value)}
             />
-            <button onClick={handleSubmit}>Submit</button>
+            <Button>Submit</Button>
         </div>
     );
 }
