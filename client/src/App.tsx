@@ -1,22 +1,27 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+
 import { Routes, Route, Navigate } from "react-router-dom";
+import { RootState } from "./app/store";
+import { useSelector } from "react-redux";
 import Home from "./pages/Home";
 import TestPage from "./pages/TestPage";
-import { Camera } from "./pages/Camera";
+
 import VideoStream from "./pages/Camera3";
 import Navbar from "./components/Navbar";
-import { Separator } from "./components/ui/separator";
-import { Toaster } from "./components/ui/toaster";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import { Separator } from "./components/ui/separator";
+import { Toaster } from "./components/ui/toaster";
 
 function App() {
     const [count, setCount] = useState(0);
-    const isAuthorized = true;
-    const isAdmin = false;
+    // const isAuthorized = true;
+    // const isAdmin = false;
+    const isAuthorized = useSelector(
+        (state: RootState) => state.root.auth.token
+    );
+    const isAdmin = useSelector((state: RootState) => state.root.auth.admin);
 
     return (
         <>
