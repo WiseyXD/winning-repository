@@ -28,86 +28,74 @@ function App() {
         <>
             {/* <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme"> */}
             <Toaster />
-            <Navbar isAuthorized={"true"} />
-            <Separator />
-            <div className="max-w-[90%] w-full mx-auto mt-4 max-h-screen">
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            !isAuthorized ? (
-                                <LandingPage />
-                            ) : (
-                                <Navigate to={"/"} />
-                            )
-                        }
-                    />
-                    <Route
-                        path="/signup"
-                        element={
-                            !isAuthorized ? (
-                                <Signup isAdmin={false} />
-                            ) : (
-                                <Navigate to={"/"} />
-                            )
-                        }
-                    />
-                    <Route
-                        path="/login"
-                        element={
-                            !isAuthorized ? (
-                                <Login isAdmin={false} />
-                            ) : (
-                                <Navigate to={"/"} />
-                            )
-                        }
-                    />
 
-                    {/* Path will be /tests */}
-                    <Route
-                        path="/"
-                        element={
-                            isAuthorized ? (
-                                isAdmin ? (
-                                    <Navigate to={"/admin"} />
-                                ) : (
-                                    <Home />
-                                )
-                            ) : (
-                                <Navigate to={"/login"} />
-                            )
-                        }
-                    />
+            <Routes>
+                <Route
+                    path="/signup"
+                    element={
+                        !isAuthorized ? (
+                            <Signup isAdmin={false} />
+                        ) : (
+                            <Navigate to={"/"} />
+                        )
+                    }
+                />
+                <Route
+                    path="/login"
+                    element={
+                        !isAuthorized ? (
+                            <Login isAdmin={false} />
+                        ) : (
+                            <Navigate to={"/"} />
+                        )
+                    }
+                />
 
-                    <Route
-                        path="/:roomId"
-                        element={
-                            isAuthorized ? (
-                                isAdmin ? (
-                                    <Navigate to={"/admin"} />
-                                ) : (
-                                    <TestPage />
-                                )
+                {/* Path will be /tests */}
+                <Route
+                    path="/"
+                    element={
+                        isAuthorized ? (
+                            isAdmin ? (
+                                <Navigate to={"/admin"} />
                             ) : (
-                                <Navigate to={"/login"} />
+                                <Home />
                             )
-                        }
-                    />
-                    <Route
-                        path="/cam"
-                        element={
-                            isAuthorized ? (
-                                isAdmin ? (
-                                    <Navigate to={"/admin"} />
-                                ) : (
-                                    <VideoStream />
-                                )
+                        ) : (
+                            <LandingPage />
+                        )
+                    }
+                />
+
+                <Route
+                    path="/:roomId"
+                    element={
+                        isAuthorized ? (
+                            isAdmin ? (
+                                <Navigate to={"/admin"} />
                             ) : (
-                                <Navigate to={"/login"} />
+                                <TestPage />
                             )
-                        }
-                    />
-                    {/* <Route
+                        ) : (
+                            <Navigate to={"/login"} />
+                        )
+                    }
+                />
+                <Route
+                    path="/cam"
+                    element={
+                        isAuthorized ? (
+                            isAdmin ? (
+                                <Navigate to={"/admin"} />
+                            ) : (
+                                <VideoStream />
+                            )
+                        ) : (
+                            <Navigate to={"/login"} />
+                        )
+                    }
+                />
+                {/* <Route
                         path="/:todoId"
                         element={
                             isAuthorized ? (
@@ -135,44 +123,44 @@ function App() {
                             )
                         }
                     /> */}
-                    {/* Admin Routes */}
-                    <Route
-                        path="/admin/signup"
-                        element={
-                            !isAuthorized ? (
-                                <Signup isAdmin={true} />
+                {/* Admin Routes */}
+                <Route
+                    path="/admin/signup"
+                    element={
+                        !isAuthorized ? (
+                            <Signup isAdmin={true} />
+                        ) : (
+                            <Navigate to={"/admin"} />
+                        )
+                    }
+                />
+                <Route
+                    path="/admin/login"
+                    element={
+                        !isAuthorized ? (
+                            <Login isAdmin={true} />
+                        ) : (
+                            <Navigate to={"/admin"} />
+                        )
+                    }
+                />
+                <Route
+                    path="/admin"
+                    element={
+                        isAuthorized ? (
+                            isAdmin ? (
+                                <AdminDashboard />
                             ) : (
-                                <Navigate to={"/admin"} />
+                                <Navigate to={"/"} />
                             )
-                        }
-                    />
-                    <Route
-                        path="/admin/login"
-                        element={
-                            !isAuthorized ? (
-                                <Login isAdmin={true} />
-                            ) : (
-                                <Navigate to={"/admin"} />
-                            )
-                        }
-                    />
-                    <Route
-                        path="/admin"
-                        element={
-                            isAuthorized ? (
-                                isAdmin ? (
-                                    <AdminDashboard />
-                                ) : (
-                                    <Navigate to={"/"} />
-                                )
-                            ) : (
-                                <Navigate to={"/admin/login"} />
-                            )
-                        }
-                    />
+                        ) : (
+                            <Navigate to={"/admin/login"} />
+                        )
+                    }
+                />
 
-                    {/* wildcard*/}
-                    {/* <Route
+                {/* wildcard*/}
+                {/* <Route
                         path="/*"
                         element={
                             isAuthorized ? (
@@ -186,8 +174,8 @@ function App() {
                             )
                         }
                     /> */}
-                </Routes>
-            </div>
+            </Routes>
+            {/* </div> */}
             {/* </ThemeProvider> */}
         </>
     );

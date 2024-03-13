@@ -14,6 +14,7 @@ const VideoStream = () => {
         // Get the base64 encoded frame data from the webcam
         // @ts-ignore
         const frame = webcamRef.current.getScreenshot();
+        console.log(frame);
         const imageData = frame.split(",")[1]; // Extract base64 encoded image data
         const pixels = atob(imageData); // Decode base64 string to binary data
         const byteArray = new Uint8Array(pixels.length); // Create Uint8Array from binary data
