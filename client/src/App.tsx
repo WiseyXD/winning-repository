@@ -13,15 +13,16 @@ import Signup from "./pages/Signup";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import { Separator } from "./components/ui/separator";
 import { Toaster } from "./components/ui/toaster";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
     const [count, setCount] = useState(0);
-    // const isAuthorized = true;
-    // const isAdmin = false;
-    const isAuthorized = useSelector(
-        (state: RootState) => state.root.auth.token
-    );
-    const isAdmin = useSelector((state: RootState) => state.root.auth.admin);
+    const isAuthorized = false;
+    const isAdmin = false;
+    // const isAuthorized = useSelector(
+    //     (state: RootState) => state.root.auth.token
+    // );
+    // const isAdmin = useSelector((state: RootState) => state.root.auth.admin);
 
     return (
         <>
@@ -31,6 +32,16 @@ function App() {
             <Separator />
             <div className="max-w-[90%] w-full mx-auto mt-4 max-h-screen">
                 <Routes>
+                    <Route
+                        path="/"
+                        element={
+                            !isAuthorized ? (
+                                <LandingPage />
+                            ) : (
+                                <Navigate to={"/"} />
+                            )
+                        }
+                    />
                     <Route
                         path="/signup"
                         element={
