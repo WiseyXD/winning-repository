@@ -14,10 +14,11 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import { Separator } from "./components/ui/separator";
 import { Toaster } from "./components/ui/toaster";
 import LandingPage from "./pages/LandingPage";
+import WebSocketClient from "./pages/WebSocket";
 
 function App() {
     const [count, setCount] = useState(0);
-    const isAuthorized = false;
+    const isAuthorized = true;
     const isAdmin = false;
     // const isAuthorized = useSelector(
     //     (state: RootState) => state.root.auth.token
@@ -88,7 +89,7 @@ function App() {
                             isAdmin ? (
                                 <Navigate to={"/admin"} />
                             ) : (
-                                <VideoStream />
+                                <WebSocketClient />
                             )
                         ) : (
                             <Navigate to={"/login"} />

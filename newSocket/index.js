@@ -1,5 +1,5 @@
 // Connect to WebSocket server
-const socket = new WebSocket("ws://localhost:8080"); // Replace with your server address
+const socket = new WebSocket("ws://localhost:8081"); // Replace with your server address
 
 // Event listener for connection
 socket.addEventListener("open", () => {

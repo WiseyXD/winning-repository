@@ -1,11 +1,17 @@
 import { useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Webcam from "react-webcam";
 
-import { selectSocket } from "../features/socket/socketSlice";
+import { selectSocket, setSocket } from "../features/socket/socketSlice";
 
 const VideoStream = () => {
-    const socket = useSelector(selectSocket);
+    // const dispatch = useDispatch();
+
+    useEffect(() => {
+        const socket = new WebSocket("ws://localhost:8080");
+    }, []);
+
+    // const socket = useSelector(selectSocket);
     const webcamRef = useRef(null);
 
     const captureFrameInterval = useRef(null); // Ref to store the setInterval ID
@@ -14,7 +20,7 @@ const VideoStream = () => {
         // Get the base64 encoded frame data from the webcam
         // @ts-ignore
         const frame = webcamRef.current.getScreenshot();
-        console.log(frame);
+
         const imageData = frame.split(",")[1]; // Extract base64 encoded image data
         const pixels = atob(imageData); // Decode base64 string to binary data
         const byteArray = new Uint8Array(pixels.length); // Create Uint8Array from binary data
@@ -25,7 +31,8 @@ const VideoStream = () => {
         }
 
         // Send frame data to the server
-        socket?.emit("frame", byteArray.buffer);
+        socket.send(byteArray.buffer);
+        socket.send("hello");
     };
 
     // Start capturing frames on component mount
@@ -37,7 +44,7 @@ const VideoStream = () => {
         return () => {
             // @ts-ignore
             clearInterval(captureFrameInterval.current);
-            socket?.off();
+            // socket?.off();
         };
     }, []);
 

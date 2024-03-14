@@ -1,22 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-
-import { io, Socket } from "socket.io-client";
+import { WebSocket } from "ws";
 
 interface SocketState {
-    socket: Socket | null;
+    socket: WebSocket | null;
 }
 
 const initialState: SocketState = {
-    socket: io("localhost:3000"),
+    socket: null,
 };
 
 const socketSlice = createSlice({
     name: "socket",
     initialState,
     reducers: {
-        setSocket: (state, action: PayloadAction<Socket | null>) => {
-            // @ts-ignore
+        setSocket: (state, action: PayloadAction<WebSocket | null>) => {
             state.socket = action.payload;
         },
     },
