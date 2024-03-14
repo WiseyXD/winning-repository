@@ -14,12 +14,6 @@ wss.on("connection", (ws) => {
         // Echo the message back to the client
         ws.send(`Echo: ${message}`);
     });
-    ws.on("frame", (message) => {
-        console.log(message);
-
-        // Echo the message back to the client
-        ws.send(`Echo: ${message}`);
-    });
 
     // Event listener for disconnection
     ws.on("close", () => {
