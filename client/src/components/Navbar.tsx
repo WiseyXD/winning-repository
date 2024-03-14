@@ -1,9 +1,9 @@
 import { Button } from "./ui/button";
 import { useDispatch } from "react-redux";
-// import { unsetAuth } from "@/app/Slices/authSlice";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { unsetAuth } from "@/features/auth/authSlice";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     DropdownMenu,
@@ -24,7 +24,7 @@ export default function Navbar({ isAuthorized }: NavbarProps) {
     const location = useLocation();
     const path = location.pathname;
     async function handleLogout() {
-        // dispatch(unsetAuth());
+        dispatch(unsetAuth());
     }
     // Use seprator component for navbar from shadcn
     return (

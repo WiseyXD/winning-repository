@@ -16,6 +16,9 @@ import { Input } from "@/components/ui/input";
 
 import { cn } from "@/lib/utils";
 import { useAdminSignupMutation, useSignupMutation } from "@/app/api/authApi";
+import { setAuth } from "@/features/auth/authSlice";
+import { useDispatch } from "react-redux";
+import { useToast } from "@/components/ui/use-toast";
 
 type SignupProps = {
     isAdmin: boolean;
@@ -29,6 +32,8 @@ const formSchema = z.object({
 export default function Signup({ isAdmin }: SignupProps) {
     const [studentSingup] = useSignupMutation();
     const [adminSignup] = useAdminSignupMutation();
+    const dispatch = useDispatch();
+    const { toast } = useToast();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -36,12 +41,47 @@ export default function Signup({ isAdmin }: SignupProps) {
             password: "",
         },
     });
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
         try {
-            const { data } = studentSingup(values);
-        } catch (error) {}
+            if (!isAdmin) {
+                // @ts-ignore
+                const { data, isFetching } = await studentSingup(values);
+                if (isFetching) return null;
+                if (data.msg !== "success") {
+                    toast({
+                        title: "User already exists",
+                    });
+                    return;
+                }
+                dispatch(setAuth(data));
+                toast({
+                    title: "Logged in as " + data.email,
+                });
+                form.reset();
+            } else {
+                // @ts-ignore
+
+                const { data, isFetching } = await adminSignup(values);
+                if (isFetching) return null;
+                if (data.msg !== "success") {
+                    toast({
+                        title: "User already exists",
+                    });
+                    return;
+                }
+                dispatch(setAuth(data));
+                toast({
+                    title: "Logged in as " + data.email,
+                });
+                form.reset();
+            }
+        } catch (error) {
+            toast({
+                title: "Signup Failed due to Server Error",
+            });
+        }
     }
 
     return (

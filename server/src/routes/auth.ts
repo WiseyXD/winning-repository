@@ -36,7 +36,10 @@ auth.post("/student/signup", async (c) => {
             c.env.JWT_SECRET
         );
 
-        return c.json({ msg: "success", token }, 201);
+        return c.json(
+            { msg: "success", token, admin: false, email: user.email },
+            201
+        );
     } catch (err: any) {
         c.status(500);
         return c.json({ msg: err.message });
@@ -65,7 +68,10 @@ auth.post("/admin/signup", async (c) => {
             { role: user.role, email: user.email, id: user.id },
             c.env.JWT_SECRET
         );
-        return c.json({ msg: "success", token }, 201);
+        return c.json(
+            { msg: "success", token, admin: true, email: user.email },
+            201
+        );
     } catch (err: any) {
         c.status(500);
         return c.json({ msg: err.message });
@@ -96,7 +102,10 @@ auth.post("/student/login", async (c) => {
             c.env.JWT_SECRET
         );
 
-        return c.json({ msg: "success", token }, 200);
+        return c.json(
+            { msg: "success", token, admin: false, email: user.email },
+            201
+        );
     } catch (err: any) {
         c.status(500);
         return c.json({ msg: err.message });
@@ -127,7 +136,10 @@ auth.post("/admin/login", async (c) => {
             c.env.JWT_SECRET
         );
 
-        return c.json({ msg: "success", token }, 200);
+        return c.json(
+            { msg: "success", token, admin: true, email: user.email },
+            201
+        );
     } catch (err: any) {
         c.status(500);
         return c.json({ msg: err.message });

@@ -14,6 +14,10 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { cn } from "@/lib/utils";
+import { useDispatch } from "react-redux";
+import { setAuth } from "@/features/auth/authSlice";
+import { useAdminLoginMutation, useLoginMutation } from "@/app/api/authApi";
+import { useToast } from "@/components/ui/use-toast";
 
 type SignupProps = {
     isAdmin: boolean;
@@ -25,6 +29,10 @@ const formSchema = z.object({
 });
 
 export default function Login({ isAdmin }: SignupProps) {
+    const [studentLogin] = useLoginMutation();
+    const [adminLogin] = useAdminLoginMutation();
+    const dispatch = useDispatch();
+    const { toast } = useToast();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -32,12 +40,48 @@ export default function Login({ isAdmin }: SignupProps) {
             password: "",
         },
     });
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
-        console.log(values);
-    }
+        try {
+            if (!isAdmin) {
+                // @ts-ignore
+                const { data, isFetching } = await studentLogin(values);
+                if (isFetching) return null;
+                if (data.msg !== "success") {
+                    toast({
+                        title: "Loggin Failed due to Invalid Credentials",
+                    });
+                    return;
+                }
+                dispatch(setAuth(data));
+                toast({
+                    title: "Logged in as " + data.email,
+                });
+                form.reset();
+            } else {
+                // @ts-ignore
 
+                const { data, isFetching } = await adminLogin(values);
+                if (isFetching) return null;
+                if (data.msg !== "success") {
+                    toast({
+                        title: "Loggin Failed due to Invalid Credentials",
+                    });
+                    return;
+                }
+                dispatch(setAuth(data));
+                toast({
+                    title: "Logged in as " + data.email,
+                });
+                form.reset();
+            }
+        } catch (error) {
+            toast({
+                title: "Loggin Failed due to Server Error",
+            });
+        }
+    }
     return (
         <div className="h-[50rem] w-full dark:bg-black bg-white  dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex items-center justify-center">
             {/* Radial gradient for the container to give a faded look */}

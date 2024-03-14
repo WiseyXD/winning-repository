@@ -18,12 +18,11 @@ import WebSocketClient from "./pages/WebSocket";
 
 function App() {
     const [count, setCount] = useState(0);
-    const isAuthorized = false;
-    const isAdmin = false;
-    // const isAuthorized = useSelector(
-    //     (state: RootState) => state.root.auth.token
-    // );
-    // const isAdmin = useSelector((state: RootState) => state.root.auth.admin);
+
+    const isAuthorized = useSelector(
+        (state: RootState) => state.root.auth.token
+    );
+    const isAdmin = useSelector((state: RootState) => state.root.auth.admin);
 
     return (
         <>
