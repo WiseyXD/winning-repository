@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { cn } from "@/lib/utils";
+import { useAdminSignupMutation, useSignupMutation } from "@/app/api/authApi";
 
 type SignupProps = {
     isAdmin: boolean;
@@ -23,22 +24,24 @@ type SignupProps = {
 const formSchema = z.object({
     email: z.string().email(),
     password: z.string().min(5, "Password must be 5 Characters Long"),
-    rePassword: z.string().min(5, "Password must be 5 Characters Long"),
 });
 
 export default function Signup({ isAdmin }: SignupProps) {
+    const [studentSingup] = useSignupMutation();
+    const [adminSignup] = useAdminSignupMutation();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             email: "",
             password: "",
-            rePassword: "",
         },
     });
     function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
-        console.log(values);
+        try {
+            const { data } = studentSingup(values);
+        } catch (error) {}
     }
 
     return (
@@ -96,7 +99,7 @@ export default function Signup({ isAdmin }: SignupProps) {
                                     )}
                                 />
 
-                                <FormField
+                                {/* <FormField
                                     control={form.control}
                                     name="rePassword"
                                     render={({ field }) => (
@@ -114,7 +117,7 @@ export default function Signup({ isAdmin }: SignupProps) {
                                             <FormMessage />
                                         </FormItem>
                                     )}
-                                />
+                                /> */}
 
                                 <button
                                     className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
