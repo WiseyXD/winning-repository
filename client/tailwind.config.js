@@ -18,6 +18,9 @@ module.exports = {
     prefix: "",
     darkMode: "class",
     theme: {
+        // colors: {
+        //     secondary: "#09090b",
+        // },
         container: {
             center: true,
             padding: "2rem",
