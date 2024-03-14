@@ -1,9 +1,17 @@
+import { useToast } from "@/components/ui/use-toast";
 import React, { useState, useEffect } from "react";
 
 const WebSocketClient: React.FC = () => {
     const [socket, setSocket] = useState<WebSocket | null>(null);
-    const [message, setMessage] = useState<string>("");
+    const [message, setMessage] = useState<string>("1");
     const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
+    const { toast } = useToast();
+
+    function sendToastMessage() {
+        toast({
+            title: `${receivedMessages}`,
+        });
+    }
 
     useEffect(() => {
         const ws = new WebSocket("ws://localhost:8080"); // WebSocket server address
@@ -21,6 +29,8 @@ const WebSocketClient: React.FC = () => {
                 ...prevMessages,
                 newMessage,
             ]);
+            console.log(receivedMessages);
+            sendToastMessage();
         };
 
         // Event listener for connection close
@@ -37,15 +47,28 @@ const WebSocketClient: React.FC = () => {
         };
     }, []);
 
-    // Function to handle sending messages
     const sendMessage = () => {
         if (
             socket &&
             socket.readyState === WebSocket.OPEN &&
             message.trim() !== ""
         ) {
-            socket.send(message);
-            setMessage("");
+            const time = setInterval(() => {
+                socket.send(message);
+            }, 10);
+        }
+    };
+
+    const sendFrames = () => {
+        if (
+            socket &&
+            socket.readyState === WebSocket.OPEN &&
+            message.trim() !== ""
+        ) {
+            const timerId = setInterval(() => {
+                socket.send("1");
+                console.log("1");
+            }, 10);
         }
     };
 
@@ -53,13 +76,15 @@ const WebSocketClient: React.FC = () => {
         <div>
             <h1>WebSocket Client</h1>
             <div>
-                <input
+                {/* <input
                     type="text"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Type a message..."
-                />
+                /> */}
                 <button onClick={sendMessage}>Send</button>
+                <br />
+                <button>Stop</button>
             </div>
             <div>
                 <h2>Received Messages:</h2>
