@@ -92,7 +92,7 @@ const WebSocketClient: React.FC = () => {
     ) {
       const time = setInterval(() => {
         socket.send(message);
-      }, 6000 * test.duration);
+      }, 10);
     }
   };
 
