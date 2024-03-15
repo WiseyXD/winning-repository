@@ -14,6 +14,7 @@ import { Separator } from "./components/ui/separator";
 import { Toaster } from "./components/ui/toaster";
 import LandingPage from "./pages/LandingPage";
 import WebSocketClient from "./pages/WebSocket";
+import TestSubmitted from "./pages/TestSubmitted";
 
 function App() {
     const [count, setCount] = useState(0);
@@ -74,6 +75,20 @@ function App() {
                                 <Navigate to={"/admin"} />
                             ) : (
                                 <WebSocketClient />
+                            )
+                        ) : (
+                            <Navigate to={"/login"} />
+                        )
+                    }
+                />
+                <Route
+                    path="/:testId/submit"
+                    element={
+                        isAuthorized ? (
+                            isAdmin ? (
+                                <Navigate to={"/admin"} />
+                            ) : (
+                                <TestSubmitted />
                             )
                         ) : (
                             <Navigate to={"/login"} />

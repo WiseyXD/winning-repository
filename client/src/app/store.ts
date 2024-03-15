@@ -6,12 +6,14 @@ import socketReducer from "../features/socket/socketSlice";
 import dashboardReducer from "@/features/dashboardSlice/dashboardSlice";
 import { authApi } from "./api/authApi";
 import { testApi } from "./api/student/testApi";
+import testScoreReducer from "@/features/testScore/testScoreSlice";
 
 const store = configureStore({
     reducer: {
         root: rootReducer,
         socket: socketReducer,
         dashboard: dashboardReducer,
+        testScore: testScoreReducer,
         [authApi.reducerPath]: authApi.reducer,
         [testApi.reducerPath]: testApi.reducer,
     },

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { RootState } from "@/app/store";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,11 +18,26 @@ import { Button } from "@/components/ui/button";
 import { useGetTestOverviewQuery } from "@/app/api/student/testApi";
 import ShimmerCards from "@/components/ShimmerCards";
 import MinutesToMinutesAndSeconds from "@/components/MinutesToMinutesAndSeconds";
+import {
+    addWrongQuestion,
+    removeWrongQuestion,
+    resetScore,
+    resetWrongQuestions,
+    setTestScore,
+} from "@/features/testScore/testScoreSlice";
 
 const WebSocketClient: React.FC = () => {
     const isAuthorized = useSelector(
         (state: RootState) => state.root.auth.token
     );
+    const reduxScore = useSelector((state: RootState) => state.testScore.score);
+    const wrong = useSelector(
+        (state: RootState) => state.testScore.wrongQuestions
+    );
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const { testId } = useParams();
     const { toast } = useToast();
 
@@ -31,7 +46,8 @@ const WebSocketClient: React.FC = () => {
     const [message, setMessage] = useState<string>("1");
     const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
     const [testIsGoing, setTestIsGoing] = useState(false);
-    const [time, setTime] = useState(null);
+    const [time, setTime] = useState(1 * 60);
+    const [score, setScore] = useState(0);
 
     const elementRef = useRef(null);
 
@@ -85,7 +101,6 @@ const WebSocketClient: React.FC = () => {
     const { data, isFetching } = useGetTestOverviewQuery(testId);
     if (isFetching) return <ShimmerCards />;
     const test = data?.test;
-    console.log(test);
 
     const sendMessage = () => {
         if (
@@ -93,11 +108,37 @@ const WebSocketClient: React.FC = () => {
             socket.readyState === WebSocket.OPEN &&
             message.trim() !== ""
         ) {
+            const testTimer = setInterval(
+                () =>
+                    setTime((prev) => {
+                        if (prev === 0) {
+                            clearInterval(testTimer); // Stop the timer
+                            console.log("Submit");
+                            return prev; // Return prev to keep it at 0
+                        } else {
+                            const newTime = prev - 1;
+                            console.log(newTime);
+                            return newTime; // Return the decremented value to update the state
+                        }
+                    }),
+                1000
+            );
             const time = setInterval(() => {
                 socket.send(message);
             }, 10);
         }
     };
+
+    function checkOption(option: boolean) {
+        if (option) {
+            dispatch(setTestScore());
+            dispatch(removeWrongQuestion(test.questions[questionNo].text));
+        } else {
+            {
+                dispatch(addWrongQuestion(test.questions[questionNo].text));
+            }
+        }
+    }
 
     return (
         <div ref={elementRef}>
@@ -112,6 +153,7 @@ const WebSocketClient: React.FC = () => {
                                     <CardTitle>
                                         Q{questionNo + 1}){" "}
                                         {test.questions[questionNo].text}{" "}
+                                        {reduxScore}
                                     </CardTitle>
 
                                     <p>
@@ -135,7 +177,11 @@ const WebSocketClient: React.FC = () => {
                                                         type="radio"
                                                         name="quizOption"
                                                         value={option.right}
-                                                        // Assuming you have a function to handle option changes
+                                                        onChange={(e) =>
+                                                            checkOption(
+                                                                option.right
+                                                            )
+                                                        }
                                                     />
                                                     <span className="text-white ml-2">
                                                         {option.text}
@@ -166,9 +212,12 @@ const WebSocketClient: React.FC = () => {
                                         {questionNo ===
                                         test.questions.length - 1 ? (
                                             <Button
-                                                onClick={() =>
-                                                    setTestIsGoing(false)
-                                                }
+                                                onClick={() => {
+                                                    setTestIsGoing(false);
+                                                    navigate(
+                                                        `/${testId}/submit`
+                                                    );
+                                                }}
                                             >
                                                 Submit
                                             </Button>
@@ -201,11 +250,18 @@ const WebSocketClient: React.FC = () => {
                             setTestIsGoing(true);
                             handleFullScreen();
                             sendMessage();
+                            dispatch(resetScore);
+                            dispatch(resetWrongQuestions);
                         }}
                     >
                         Start Test
                     </Button>
                 )}
+            </div>
+            <div>
+                {wrong.map((wr) => {
+                    return <h1 key={wr}>{wr}</h1>;
+                })}
             </div>
         </div>
     );
