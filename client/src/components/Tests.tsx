@@ -1,6 +1,7 @@
 import { useGetAllTestsQuery } from "@/app/api/student/testApi";
 import TestCard from "./TestCard";
 import ShimmerCards from "./ShimmerCards";
+import { BackgroundBeams } from "./ui/background-beams";
 
 export default function Tests() {
     const { data, isFetching } = useGetAllTestsQuery(null);
@@ -18,6 +19,8 @@ export default function Tests() {
                             noOfQuestions={test.questions?.length}
                             expiresOn={test.validityDate}
                             description={test.description}
+                            // @ts-ignore
+                            testId={test.id}
                         />
                     );
                 })}

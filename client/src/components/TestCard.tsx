@@ -9,6 +9,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 type TestCardProps = {
     title: string;
@@ -16,6 +17,7 @@ type TestCardProps = {
     noOfQuestions: number;
     duration: number;
     expiresOn: Date;
+    testId: string;
 };
 
 export default function TestCard({
@@ -24,9 +26,15 @@ export default function TestCard({
     duration,
     noOfQuestions,
     expiresOn,
+    testId,
 }: TestCardProps) {
+    const navigate = useNavigate();
     return (
-        <Card className="w-[350px]">
+        <Card
+            className="w-[350px]"
+            role="button"
+            onClick={() => navigate(`/${testId}`)}
+        >
             <CardHeader>
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>

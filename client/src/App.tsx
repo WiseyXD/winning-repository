@@ -65,23 +65,9 @@ function App() {
                         )
                     }
                 />
-                {/* 
+
                 <Route
-                    path="/:roomId"
-                    element={
-                        isAuthorized ? (
-                            isAdmin ? (
-                                <Navigate to={"/admin"} />
-                            ) : (
-                                <TestPage />
-                            )
-                        ) : (
-                            <Navigate to={"/login"} />
-                        )
-                    }
-                /> */}
-                <Route
-                    path="/cam"
+                    path="/:testId"
                     element={
                         isAuthorized ? (
                             isAdmin ? (
