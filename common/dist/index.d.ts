@@ -23,7 +23,6 @@ export declare const testSchema: z.ZodObject<{
     title: z.ZodString;
     description: z.ZodString;
     duration: z.ZodNumber;
-    validityDate: z.ZodDate;
     questions: z.ZodArray<z.ZodObject<{
         text: z.ZodString;
         options: z.ZodArray<z.ZodObject<{
@@ -53,7 +52,6 @@ export declare const testSchema: z.ZodObject<{
     title: string;
     description: string;
     duration: number;
-    validityDate: Date;
     questions: {
         options: {
             text: string;
@@ -65,7 +63,6 @@ export declare const testSchema: z.ZodObject<{
     title: string;
     description: string;
     duration: number;
-    validityDate: Date;
     questions: {
         options: {
             text: string;

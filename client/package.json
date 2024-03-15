@@ -21,7 +21,7 @@
     "@reduxjs/toolkit": "^2.2.1",
     "@tabler/icons-react": "^3.0.1",
     "@types/ws": "^8.5.10",
-    "@wiseyxd/winning-project-common": "^2.0.0",
+    "@wiseyxd/winning-project-common": "^3.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "framer-motion": "^11.0.12",

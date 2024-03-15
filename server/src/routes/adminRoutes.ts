@@ -74,14 +74,13 @@ adminRouter.post("/tests/create", async (c, next) => {
         const { success, error }: any = testSchema.safeParse(body);
         if (!success) {
             const message = error.message;
-            return c.json({ msg: "fails", message }, 500);
+            return c.json({ msg: "fails", message }, 501);
         }
         const quiz = await prisma.quiz.create({
             data: {
                 title: body.title,
                 description: body.description,
                 duration: body.duration,
-                validityDate: body.validityDate,
                 creatorId: id,
             },
         });

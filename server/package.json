@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "@prisma/extension-accelerate": "^1.0.0",
-    "@wiseyxd/winning-project-common": "^2.0.0",
+    "@wiseyxd/winning-project-common": "^3.0.0",
     "hono": "^4.0.10",
     "prisma": "^5.10.2"
   },

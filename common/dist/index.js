@@ -45,6 +45,5 @@ exports.testSchema = z.object({
     title: z.string(),
     description: z.string(),
     duration: z.number(),
-    validityDate: z.date(),
     questions: z.array(questionSchema),
 });
