@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useGetTestOverviewQuery } from "@/app/api/student/testApi";
 import ShimmerCards from "@/components/ShimmerCards";
 import MinutesToMinutesAndSeconds from "@/components/MinutesToMinutesAndSeconds";
+import { log } from "console";
 
 const WebSocketClient: React.FC = () => {
   const isAuthorized = useSelector((state: RootState) => state.root.auth.token);
@@ -37,14 +38,37 @@ const WebSocketClient: React.FC = () => {
     if (elementRef.current) {
       if (document.fullscreenElement) {
         document.exitFullscreen();
+        document.removeEventListener("keydown", handleFullscreenKeyBlock);
       } else {
         // @ts-ignore
         elementRef.current.requestFullscreen().catch((err) => {
           console.error("Failed to enter fullscreen mode:", err);
         });
+        document.addEventListener("keydown", handleFullscreenKeyBlock);
       }
     }
   };
+  function handleFullscreenKeyBlock(event: KeyboardEvent) {
+    if (
+      event.key === "Enter" ||
+      event.key === "Escape" ||
+      event.key === "Control" ||
+      event.key === "Alt" ||
+      event.key === "F11" ||
+      // @ts-ignore
+      (event.key === "Control" && event.key == "C") ||
+      // @ts-ignore
+      (event.key === "Control" && event.key == "V") ||
+      // @ts-ignore
+      (event.key === "Alt" && event.key == "Tab") ||
+      event.key === "Tab"
+    ) {
+      event.preventDefault();
+      console.log("pressed");
+
+      return true;
+    }
+  }
 
   useEffect(() => {
     const ws = new WebSocket("ws://127.0.0.1:7000/"); // WebSocket server address
