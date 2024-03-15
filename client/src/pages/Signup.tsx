@@ -1,5 +1,5 @@
 ("use client");
-import React from "react";
+import React, { useState } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,6 +19,7 @@ import { useAdminSignupMutation, useSignupMutation } from "@/app/api/authApi";
 import { setAuth } from "@/features/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { useToast } from "@/components/ui/use-toast";
+import { AlertTriangle } from "lucide-react";
 
 type SignupProps = {
     isAdmin: boolean;
@@ -30,6 +31,7 @@ const formSchema = z.object({
 });
 
 export default function Signup({ isAdmin }: SignupProps) {
+    const [isLoading, setIsLoading] = useState(false);
     const [studentSingup] = useSignupMutation();
     const [adminSignup] = useAdminSignupMutation();
     const dispatch = useDispatch();
@@ -44,43 +46,53 @@ export default function Signup({ isAdmin }: SignupProps) {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
+        setIsLoading(true);
         try {
             if (!isAdmin) {
                 // @ts-ignore
-                const { data, isFetching } = await studentSingup(values);
+                const { data, isFetching, isError } = await studentSingup(
+                    values
+                );
                 if (isFetching) return null;
                 if (data.msg !== "success") {
                     toast({
                         title: "User already exists",
                     });
+                    setIsLoading(false);
                     return;
                 }
                 dispatch(setAuth(data));
                 toast({
                     title: "Logged in as " + data.email,
                 });
+                setIsLoading(false);
                 form.reset();
             } else {
                 // @ts-ignore
 
-                const { data, isFetching } = await adminSignup(values);
+                const { data, isFetching, isError } = await adminSignup(values);
                 if (isFetching) return null;
                 if (data.msg !== "success") {
                     toast({
                         title: "User already exists",
                     });
+                    setIsLoading(false);
                     return;
                 }
                 dispatch(setAuth(data));
                 toast({
                     title: "Logged in as " + data.email,
                 });
+                setIsLoading(false);
+
                 form.reset();
             }
-        } catch (error) {
+        } catch (isError) {
             toast({
-                title: "Signup Failed due to Server Error",
+                title: `User already exists`,
+                variant: "destructive",
             });
+            setIsLoading(false);
         }
     }
 
@@ -162,6 +174,7 @@ export default function Signup({ isAdmin }: SignupProps) {
                                 <button
                                     className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
                                     type="submit"
+                                    disabled={isLoading}
                                 >
                                     Sign up &rarr;
                                     <BottomGradient />

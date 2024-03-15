@@ -24,6 +24,9 @@ auth.post("/student/signup", async (c) => {
         return c.json({ msg: "fails", message }, 500);
     }
     try {
+        if (await prisma.user.findFirst({ where: body.email })) {
+            throw Error("User Already exists in DB");
+        }
         const user = await prisma.user.create({
             data: {
                 email: body.email,
@@ -41,8 +44,7 @@ auth.post("/student/signup", async (c) => {
             201
         );
     } catch (err: any) {
-        c.status(500);
-        return c.json({ msg: err.message });
+        return c.json({ msg: err.message }, 500);
     }
 });
 
@@ -57,6 +59,10 @@ auth.post("/admin/signup", async (c) => {
             const message = error.message;
             return c.json({ msg: "fails", message }, 500);
         }
+        if (await prisma.user.findFirst({ where: body.email })) {
+            throw Error("User Already exists in DB");
+        }
+
         const user = await prisma.user.create({
             data: {
                 email: body.email,
@@ -73,8 +79,7 @@ auth.post("/admin/signup", async (c) => {
             201
         );
     } catch (err: any) {
-        c.status(500);
-        return c.json({ msg: err.message });
+        return c.json({ msg: err.message }, 500);
     }
 });
 

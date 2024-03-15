@@ -1,5 +1,5 @@
 ("use client");
-import React from "react";
+import React, { useState } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -29,6 +29,7 @@ const formSchema = z.object({
 });
 
 export default function Login({ isAdmin }: SignupProps) {
+    const [isLoading, setIsLoading] = useState(false);
     const [studentLogin] = useLoginMutation();
     const [adminLogin] = useAdminLoginMutation();
     const dispatch = useDispatch();
@@ -43,6 +44,7 @@ export default function Login({ isAdmin }: SignupProps) {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
+        setIsLoading(true);
         try {
             if (!isAdmin) {
                 // @ts-ignore
@@ -52,12 +54,15 @@ export default function Login({ isAdmin }: SignupProps) {
                     toast({
                         title: "Loggin Failed due to Invalid Credentials",
                     });
+                    setIsLoading(false);
                     return;
                 }
                 dispatch(setAuth(data));
                 toast({
                     title: "Logged in as " + data.email,
                 });
+                setIsLoading(false);
+
                 form.reset();
             } else {
                 // @ts-ignore
@@ -68,15 +73,21 @@ export default function Login({ isAdmin }: SignupProps) {
                     toast({
                         title: "Loggin Failed due to Invalid Credentials",
                     });
+                    setIsLoading(false);
+
                     return;
                 }
                 dispatch(setAuth(data));
                 toast({
                     title: "Logged in as " + data.email,
                 });
+                setIsLoading(false);
+
                 form.reset();
             }
         } catch (error) {
+            setIsLoading(false);
+
             toast({
                 title: "Loggin Failed due to Server Error",
             });
