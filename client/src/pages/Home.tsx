@@ -24,6 +24,7 @@ export default function Home() {
 
             <div className="min-h-[94vh] flex ">
                 <Sidebar />
+
                 {componentToRender}
             </div>
         </>

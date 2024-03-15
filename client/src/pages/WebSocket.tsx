@@ -110,7 +110,7 @@ const WebSocketClient: React.FC = () => {
 
                   <p>
                     Time left :
-                    <MinutesToMinutesAndSeconds minutes={120} />
+                    <MinutesToMinutesAndSeconds minutes={test.duration} />
                   </p>
                 </div>
               </CardHeader>
