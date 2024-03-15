@@ -47,7 +47,7 @@ const WebSocketClient: React.FC = () => {
   };
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8080"); // WebSocket server address
+    const ws = new WebSocket("ws://127.0.0.1:7000/"); // WebSocket server address
 
     // Event listener for connection open
     ws.onopen = () => {
