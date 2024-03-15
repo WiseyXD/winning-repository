@@ -3,8 +3,9 @@ import { persistStore } from "redux-persist";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import rootReducer from "./rootReducer";
 import socketReducer from "../features/socket/socketSlice";
-import { authApi } from "./api/authApi";
 import dashboardReducer from "@/features/dashboardSlice/dashboardSlice";
+import { authApi } from "./api/authApi";
+import { testApi } from "./api/student/testApi";
 
 const store = configureStore({
     reducer: {
@@ -12,9 +13,10 @@ const store = configureStore({
         socket: socketReducer,
         dashboard: dashboardReducer,
         [authApi.reducerPath]: authApi.reducer,
+        [testApi.reducerPath]: testApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(authApi.middleware),
+        getDefaultMiddleware().concat(authApi.middleware, testApi.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

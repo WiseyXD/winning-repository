@@ -16,7 +16,7 @@ export default function Home() {
     useEffect(() => {
         dispatch(setDashboardComponenet({ component: <Tests /> }));
     }, []);
-    console.log(componentToRender);
+
     return (
         <>
             <Navbar isAuthorized={"true"} />
