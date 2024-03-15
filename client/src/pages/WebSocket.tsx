@@ -73,8 +73,6 @@ const WebSocketClient: React.FC = () => {
             setSocket(null);
         };
 
-        handleFullScreen();
-
         // Cleanup function
         return () => {
             if (ws.readyState === WebSocket.OPEN) {
@@ -201,6 +199,8 @@ const WebSocketClient: React.FC = () => {
                     <Button
                         onClick={() => {
                             setTestIsGoing(true);
+                            handleFullScreen();
+                            sendMessage();
                         }}
                     >
                         Start Test
