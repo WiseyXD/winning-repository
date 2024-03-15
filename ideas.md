@@ -6,6 +6,7 @@
 -   [] Generate detailed reports after exams for analysis and action.
 -   [] Wrong ans can be send to Gemini and response where a student is lacking and needs to work can be generated
 -   [] Submitted Test must be saved in DB and Should be reflected on Admin Panel
+-   [] Mail Service for malpractice recorded
 
 # Buisness Idea :-
 
@@ -15,3 +16,8 @@
 
 -   [] Logo and Favicon
 -   [] Research Gap
+
+# Resarch gap :-
+
+-   [x] Disabling only Keybinds / instead of the whole keyboard
+-   [] Writin exam , so we can use plagirism checker
