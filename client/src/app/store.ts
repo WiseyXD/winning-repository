@@ -4,11 +4,13 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import rootReducer from "./rootReducer";
 import socketReducer from "../features/socket/socketSlice";
 import { authApi } from "./api/authApi";
+import dashboardReducer from "@/features/dashboardSlice/dashboardSlice";
 
 const store = configureStore({
     reducer: {
         root: rootReducer,
         socket: socketReducer,
+        dashboard: dashboardReducer,
         [authApi.reducerPath]: authApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
