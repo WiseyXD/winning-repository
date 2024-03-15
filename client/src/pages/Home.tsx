@@ -22,7 +22,7 @@ export default function Home() {
             <Navbar isAuthorized={"true"} />
             <Separator />
 
-            <div className="min-h-[94vh] flex  ">
+            <div className="min-h-[94vh] flex ">
                 <Sidebar />
                 {componentToRender}
             </div>
