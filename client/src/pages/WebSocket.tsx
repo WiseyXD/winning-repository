@@ -250,8 +250,8 @@ const WebSocketClient: React.FC = () => {
                             setTestIsGoing(true);
                             handleFullScreen();
                             sendMessage();
-                            dispatch(resetScore);
-                            dispatch(resetWrongQuestions);
+                            dispatch(resetScore());
+                            dispatch(resetWrongQuestions());
                         }}
                     >
                         Start Test
