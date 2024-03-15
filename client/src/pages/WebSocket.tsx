@@ -47,7 +47,7 @@ const WebSocketClient: React.FC = () => {
   };
 
   useEffect(() => {
-    const ws = new WebSocket("ws://127.0.0.1:7000/"); // WebSocket server address
+    const ws = new WebSocket("ws://localhost:8080"); // WebSocket server address
 
     // Event listener for connection open
     ws.onopen = () => {
@@ -67,8 +67,6 @@ const WebSocketClient: React.FC = () => {
       console.log("Disconnected from WebSocket server");
       setSocket(null);
     };
-
-    handleFullScreen();
 
     // Cleanup function
     return () => {
@@ -171,6 +169,8 @@ const WebSocketClient: React.FC = () => {
           <Button
             onClick={() => {
               setTestIsGoing(true);
+              handleFullScreen();
+              sendMessage();
             }}
           >
             Start Test
