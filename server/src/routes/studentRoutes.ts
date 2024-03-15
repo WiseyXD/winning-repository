@@ -46,7 +46,15 @@ studentRouter.get("/tests", async (c, next) => {
         const prisma = new PrismaClient({
             datasourceUrl: c.env?.DATABASE_URL,
         }).$extends(withAccelerate());
-        const tests = await prisma.quiz.findMany();
+        const tests = await prisma.quiz.findMany({
+            include: {
+                questions: {
+                    include: {
+                        options: true,
+                    },
+                },
+            },
+        });
         return c.json({ msg: "success", tests }, 200);
     } catch (error: any) {
         const message = error.message;
