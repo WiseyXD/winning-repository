@@ -4,7 +4,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { RootState } from "./app/store";
 import { useSelector } from "react-redux";
 import Home from "./pages/Home";
-import TestPage from "./pages/TestPage";
 
 import VideoStream from "./pages/Camera3";
 import Navbar from "./components/Navbar";
@@ -66,7 +65,7 @@ function App() {
                         )
                     }
                 />
-
+                {/* 
                 <Route
                     path="/:roomId"
                     element={
@@ -80,7 +79,7 @@ function App() {
                             <Navigate to={"/login"} />
                         )
                     }
-                />
+                /> */}
                 <Route
                     path="/cam"
                     element={

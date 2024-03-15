@@ -1,4 +1,6 @@
 import Navbar from "@/components/Navbar";
+import Sidebar from "@/components/Sidebar";
+import Tests from "@/components/Tests";
 import { Separator } from "@/components/ui/separator";
 
 export default function Home() {
@@ -6,8 +8,10 @@ export default function Home() {
         <>
             <Navbar isAuthorized={"true"} />
             <Separator />
-            <div className="max-w-[90%] w-full mx-auto mt-4 max-h-screen">
-                <p className="text-neutral-300">Hey</p>Heelo
+
+            <div className="min-h-[94vh] flex  ">
+                <Sidebar />
+                <Tests />
             </div>
         </>
     );
