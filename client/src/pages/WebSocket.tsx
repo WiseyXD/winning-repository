@@ -95,7 +95,7 @@ const WebSocketClient: React.FC = () => {
         ) {
             const time = setInterval(() => {
                 socket.send(message);
-            }, 6000 * test.duration);
+            }, 10);
         }
     };
 
@@ -117,7 +117,7 @@ const WebSocketClient: React.FC = () => {
                                     <p>
                                         Time left :
                                         <MinutesToMinutesAndSeconds
-                                            minutes={120}
+                                            minutes={test.duration}
                                         />
                                     </p>
                                 </div>

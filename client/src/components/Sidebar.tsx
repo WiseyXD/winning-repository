@@ -17,8 +17,8 @@ export default function Sidebar() {
         (state: RootState) => state.dashboard.component
     );
     return (
-        <div className="basis-2/12 flex flex-col bg-zinc-900">
-            <div>
+        <div className="basis-2/12 flex flex-col bg-zinc-900 border-r border-r-slate-800">
+            <div className="">
                 {sidebarItems.map((item, index) => {
                     return (
                         <div
