@@ -46,6 +46,8 @@ const WebSocketClient: React.FC = () => {
 
     const [questionNo, setQuestionNo] = useState<number>(0);
     const [socket, setSocket] = useState<WebSocket | null>(null);
+    const [socket2, setSocket2] = useState<WebSocket | null>(null);
+
     const [message, setMessage] = useState<string>("1");
     const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
     const [testIsGoing, setTestIsGoing] = useState(false);
@@ -62,12 +64,21 @@ const WebSocketClient: React.FC = () => {
     const elementRef = useRef(null);
 
     useEffect(() => {
-        const ws = new WebSocket("ws://localhost:8080"); // WebSocket server address
+        const ws = new WebSocket("ws://localhost:8080");
+        const ws2 = new WebSocket("ws://localhost:8082");
+
+        // WebSocket server address
 
         // Event listener for connection open
         ws.onopen = () => {
-            console.log("Connected to WebSocket server");
+            console.log("Connected to WebSocket server 1");
             setSocket(ws);
+        };
+
+        ws2.onopen = () => {
+            console.log("Connected to WebSocket server 2");
+
+            setSocket(ws2);
         };
 
         // Event listener for receiving messages
@@ -77,19 +88,36 @@ const WebSocketClient: React.FC = () => {
                 ...prevMessages,
                 newMessage,
             ]);
-            console.log(receivedMessages);
+            console.log(receivedMessages + "video");
+        };
+
+        ws2.onmessage = (event: MessageEvent) => {
+            const newMessage: string = event.data;
+            setReceivedMessages((prevMessages) => [
+                ...prevMessages,
+                newMessage,
+            ]);
+            console.log(receivedMessages + "audio");
         };
 
         // Event listener for connection close
         ws.onclose = () => {
-            console.log("Disconnected from WebSocket server");
+            console.log("Disconnected from WebSocket server 1");
             setSocket(null);
+        };
+
+        ws2.onclose = () => {
+            console.log("Disconnected from WebSocket server 2");
+            setSocket2(null);
         };
 
         // Cleanup function
         return () => {
             if (ws.readyState === WebSocket.OPEN) {
                 ws.close();
+            }
+            if (ws2.readyState === WebSocket.OPEN) {
+                ws2.close();
             }
         };
     }, []);
