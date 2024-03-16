@@ -27,6 +27,7 @@ import {
 } from "@/features/testScore/testScoreSlice";
 import useMouseTracker from "@/hooks/useMouseTracker";
 import useKeyboardTracker from "@/hooks/useKeyboardTracker";
+import useTabTracker from "@/hooks/useTabTracker";
 
 const WebSocketClient: React.FC = () => {
     const isAuthorized = useSelector(
@@ -48,34 +49,17 @@ const WebSocketClient: React.FC = () => {
     const [message, setMessage] = useState<string>("1");
     const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
     const [testIsGoing, setTestIsGoing] = useState(false);
-    const [time, setTime] = useState(1 * 60);
+    const [timer, setTimer] = useState(1 * 60);
     const [resrictedCount, setResrictedCount] = useState(0);
+    const [sendIntervalId, setSendIntervalId] = useState<NodeJS.Timeout | null>(
+        null
+    );
 
     const isMouseNear = useMouseTracker(undefined, testIsGoing);
     const isWrongKeyPressed = useKeyboardTracker();
+    useTabTracker();
 
     const elementRef = useRef(null);
-
-    const handleFullScreen = () => {
-        if (elementRef.current) {
-            if (document.fullscreenElement) {
-                document.exitFullscreen();
-                console.log("Fullscreen out");
-                handleSubmitTest();
-                document.removeEventListener(
-                    "keydown",
-                    handleFullscreenKeyBlock
-                );
-            } else {
-                // @ts-ignore
-                elementRef.current.requestFullscreen().catch((err) => {
-                    console.error("Failed to enter fullscreen mode:", err);
-                });
-                document.addEventListener("keydown", handleFullscreenKeyBlock);
-                window.addEventListener("keydown", checkEscacpe);
-            }
-        }
-    };
 
     useEffect(() => {
         const ws = new WebSocket("ws://localhost:8080"); // WebSocket server address
@@ -107,7 +91,6 @@ const WebSocketClient: React.FC = () => {
             if (ws.readyState === WebSocket.OPEN) {
                 ws.close();
             }
-            document.removeEventListener("keydown", handleFullscreenKeyBlock);
         };
     }, []);
 
@@ -115,33 +98,6 @@ const WebSocketClient: React.FC = () => {
     const { data, isFetching } = useGetTestOverviewQuery(testId);
     if (isFetching) return <ShimmerCards />;
     const test = data?.test;
-
-    const sendMessage = () => {
-        if (
-            socket &&
-            socket.readyState === WebSocket.OPEN &&
-            message.trim() !== ""
-        ) {
-            const testTimer = setInterval(
-                () =>
-                    setTime((prev) => {
-                        if (prev === 0) {
-                            clearInterval(testTimer); // Stop the timer
-                            console.log("Submit");
-                            return prev; // Return prev to keep it at 0
-                        } else {
-                            const newTime = prev - 1;
-                            console.log(newTime);
-                            return newTime; // Return the decremented value to update the state
-                        }
-                    }),
-                1000
-            );
-            const time = setInterval(() => {
-                socket.send(message);
-            }, 10);
-        }
-    };
 
     function checkOption(option: boolean) {
         if (option) {
@@ -197,6 +153,19 @@ const WebSocketClient: React.FC = () => {
         }
     }
 
+    const sendMessage = () => {
+        if (
+            socket &&
+            socket.readyState === WebSocket.OPEN &&
+            message.trim() !== ""
+        ) {
+            const time = setInterval(() => {
+                socket.send(message);
+            }, 10);
+            setSendIntervalId(time);
+        }
+    };
+
     async function handleStartTest(e: any) {
         setTestIsGoing(true);
         // handleFullScreen();
@@ -209,6 +178,7 @@ const WebSocketClient: React.FC = () => {
     async function handleSubmitTest() {
         setTestIsGoing(false);
         navigate(`/${testId}/submit`);
+        if (sendIntervalId) clearInterval(sendIntervalId);
     }
 
     return (
