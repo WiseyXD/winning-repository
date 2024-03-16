@@ -17,7 +17,6 @@ export default function Tests() {
                             title={test.title}
                             duration={test.duration}
                             noOfQuestions={test.questions?.length}
-                            expiresOn={test.validityDate}
                             description={test.description}
                             // @ts-ignore
                             testId={test.id}

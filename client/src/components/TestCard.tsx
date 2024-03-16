@@ -16,7 +16,7 @@ type TestCardProps = {
     description: string;
     noOfQuestions: number;
     duration: number;
-    expiresOn: Date;
+
     testId: string;
 };
 
@@ -25,7 +25,7 @@ export default function TestCard({
     description,
     duration,
     noOfQuestions,
-    expiresOn,
+
     testId,
 }: TestCardProps) {
     const navigate = useNavigate();
@@ -51,10 +51,6 @@ export default function TestCard({
                     <div className="flex gap-1 space-y-1.5">
                         <p>No of Questions :</p>
                         {noOfQuestions}
-                    </div>
-                    <div className="flex gap-1 space-y-1.5">
-                        <p>Expires On :</p>
-                        {moment(expiresOn).calendar()}
                     </div>
                 </div>
             </CardContent>

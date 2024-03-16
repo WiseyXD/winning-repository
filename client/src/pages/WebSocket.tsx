@@ -61,6 +61,7 @@ const WebSocketClient: React.FC = () => {
     const [sendIntervalId, setSendIntervalId] = useState<NodeJS.Timeout | null>(
         null
     );
+    const [isLoading, setIsLoading] = useState(true);
 
     const isMouseNear = useMouseTracker(
         undefined,
@@ -73,6 +74,7 @@ const WebSocketClient: React.FC = () => {
     const elementRef = useRef(null);
 
     useEffect(() => {
+        setTimeout(() => setIsLoading(false), 8000);
         const ws = new WebSocket("ws://127.0.0.1:8000/ws/");
         const ws2 = new WebSocket("ws://127.0.0.1:7000/ws/");
 
@@ -356,7 +358,10 @@ const WebSocketClient: React.FC = () => {
                         </Card>
                     </div>
                 ) : (
-                    <Button onClick={(e) => handleStartTest(e)}>
+                    <Button
+                        onClick={(e) => handleStartTest(e)}
+                        disabled={isLoading}
+                    >
                         Start Test
                     </Button>
                 )}
