@@ -19,5 +19,19 @@
 
 # Resarch gap :-
 
--   [x] Disabling only Keybinds / instead of the whole keyboard
 -   [] Writin exam , so we can use plagirism checker
+
+## Aglie Features
+
+<!--Before 7pm -->
+
+-   [x] Disabling only Keybinds / instead of the whole keyboard
+-   [] Start Test ka seprate function ()
+-   [] Umar ka Alert count maintain
+-   [] creating an Instruction Page
+-   [] Email from Client(REsend Lib) and use react email for template
+
+<!-- Before 3 -->
+
+-   [] Fiinal Test Submit UI
+-   [] Admin Side Work
