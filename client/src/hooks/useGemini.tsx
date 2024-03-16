@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-export default function useGemini(text: string[]) {
+export default function useGemini(text: string) {
     const [ans, setAns] = useState("");
 
     useEffect(() => {
@@ -9,8 +9,8 @@ export default function useGemini(text: string[]) {
         const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
         const prompt =
-            "I am sending questions that were answered wrong by me in a quiz. They are in an array. Please identify all the topics where I can improve and also suggest how to improve there. " +
-            text.join(" ");
+            "I am sending question that were answered wrong by me in a quiz. And tell how i can improve in that topic" +
+            text;
 
         async function run(prompt: any) {
             const result: any = await model.generateContent(prompt);

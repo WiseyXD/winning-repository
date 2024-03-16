@@ -11,6 +11,12 @@ import { useGetTestOverviewQuery } from "@/app/api/student/testApi";
 import TestPreview from "@/components/TestPreview";
 import TestStats from "@/components/TestStats";
 
+import {
+    ResizableHandle,
+    ResizablePanel,
+    ResizablePanelGroup,
+} from "@/components/ui/resizable";
+
 export default function TestSubmitted() {
     const isAuthorized = useSelector(
         (state: RootState) => state.root.auth.token
@@ -19,6 +25,7 @@ export default function TestSubmitted() {
         (state: RootState) => state.testScore.wrongQuestions
     );
     const { testId } = useParams();
+    // @ts-ignore
     const ans = useGemini(wrongQuestions);
     const finalScore = useSelector((state: RootState) => state.testScore.score);
     const { data, isFetching } = useGetTestOverviewQuery(testId);
@@ -32,26 +39,37 @@ export default function TestSubmitted() {
             <Navbar isAuthorized={isAuthorized} />
             <Separator />
             <div className="max-w-[90%] w-full mx-auto mt-4 max-h-screen">
-                <Tabs defaultValue="overview" className="w-full ">
-                    <TabsList>
-                        <TabsTrigger value="overview">
-                            Test Overview
-                        </TabsTrigger>
-                        <TabsTrigger value="stats">Test Statistics</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="overview">
-                        <TestPreview
-                            finalScore={finalScore}
-                            test={test}
-                            wrongQuestions={wrongQuestions}
-                        />
-                    </TabsContent>
-                    <TabsContent value="stats">
-                        <TestStats />
-                    </TabsContent>
-                </Tabs>
-
-                <p>{ans}</p>
+                <ResizablePanelGroup direction="horizontal">
+                    <ResizablePanel>
+                        {" "}
+                        <Tabs defaultValue="overview" className="w-full ">
+                            <TabsList>
+                                <TabsTrigger value="overview">
+                                    Test Overview
+                                </TabsTrigger>
+                                <TabsTrigger value="stats">
+                                    Test Statistics
+                                </TabsTrigger>
+                            </TabsList>
+                            <TabsContent value="overview">
+                                <TestPreview
+                                    finalScore={finalScore}
+                                    test={test}
+                                    wrongQuestions={wrongQuestions}
+                                />
+                            </TabsContent>
+                            <TabsContent value="stats">
+                                <TestStats />
+                            </TabsContent>
+                        </Tabs>
+                    </ResizablePanel>
+                    <ResizableHandle />
+                    <ResizablePanel className="flex flex-col gap-2">
+                        {" "}
+                        <p className="text-2xl">How can you Improve</p>
+                        <p>{ans}</p>
+                    </ResizablePanel>
+                </ResizablePanelGroup>
             </div>
         </>
     );

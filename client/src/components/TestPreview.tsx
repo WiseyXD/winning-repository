@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Separator } from "./ui/separator";
 import {
     Accordion,
@@ -6,6 +6,9 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
+import useGemini from "@/hooks/useGemini";
+import { Button } from "./ui/button";
+import { askGemini } from "@/hooks/askGemini";
 
 type TestPreviewProps = {
     test: any;
@@ -20,10 +23,23 @@ export default function TestPreview({
     finalScore,
     wrongQuestions,
 }: TestPreviewProps) {
-    console.log(wrongQuestions);
+    const [ans, setAns] = useState("");
+    // console.log(wrongQuestions);
     // console.log(test);
     const { title, description, duration, questions } = test;
     console.log(questions);
+
+    async function askingGemini(question: string) {
+        console.log("Asking Gemini");
+        const resp = await askGemini(question);
+        // @ts-ignore
+        setAns(resp);
+    }
+
+    useEffect(() => {
+        // This effect will run whenever 'ans' changes
+        console.log("Answer received:", ans);
+    }, [ans]);
 
     return (
         <div className="flex flex-col">
@@ -47,7 +63,7 @@ export default function TestPreview({
 
             <Separator />
             <div className="text-lg mb-3">Questions in the Test</div>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-5">
                 {questions.map((question: any, i: number) => {
                     return (
                         <div key={question.id} className="flex flex-col">
@@ -77,19 +93,6 @@ export default function TestPreview({
                                     );
                                 })}
                             </ul>
-                            {wrongQuestions.includes(question.text) && (
-                                <Accordion type="single" collapsible>
-                                    <AccordionItem value="item-1">
-                                        <AccordionTrigger>
-                                            How can i Improve
-                                        </AccordionTrigger>
-                                        <AccordionContent>
-                                            Yes. It adheres to the WAI-ARIA
-                                            design pattern.
-                                        </AccordionContent>
-                                    </AccordionItem>
-                                </Accordion>
-                            )}
                         </div>
                     );
                 })}
