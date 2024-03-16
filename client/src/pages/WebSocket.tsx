@@ -62,9 +62,13 @@ const WebSocketClient: React.FC = () => {
         null
     );
 
-    const isMouseNear = useMouseTracker(undefined, testIsGoing);
-    const isWrongKeyPressed = useKeyboardTracker();
-    useTabTracker();
+    const isMouseNear = useMouseTracker(
+        undefined,
+        testIsGoing,
+        setResrictedCount
+    );
+    const isWrongKeyPressed = useKeyboardTracker(setResrictedCount);
+    useTabTracker(setResrictedCount);
 
     const elementRef = useRef(null);
 
@@ -125,6 +129,19 @@ const WebSocketClient: React.FC = () => {
             }
         };
     }, []);
+
+    useEffect(() => {
+        if (resrictedCount != 0) {
+            toast({
+                title: "Alert" + resrictedCount,
+                variant: "destructive",
+            });
+        }
+        if (resrictedCount > 3) {
+            handleSubmitTest();
+            sendEmail();
+        }
+    }, [resrictedCount]);
 
     // Fetch Test Details
     const { data, isFetching } = useGetTestOverviewQuery(testId);
@@ -232,7 +249,6 @@ const WebSocketClient: React.FC = () => {
         sendMessage();
         dispatch(resetScore());
         dispatch(resetWrongQuestions());
-        sendEmail();
     }
 
     async function handleSubmitTest() {

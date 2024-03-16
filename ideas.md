@@ -27,7 +27,7 @@
 
 -   [x] Disabling only Keybinds / instead of the whole keyboard
 -   [x] Start Test ka seprate function ()
--   [] Umar ka Alert count maintain
+-   [x] Umar ka Alert count maintain
 -   [] creating an Instruction Page
 -   [] MultiLingual Support
 -   [x] Email from Client(REsend Lib) and use react email for template

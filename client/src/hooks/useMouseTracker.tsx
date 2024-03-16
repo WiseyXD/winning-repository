@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 
-const useMouseTracker = (threshold = 50, testIsGoing: boolean) => {
+const useMouseTracker = (
+    threshold = 50,
+    testIsGoing: boolean,
+    // @ts-ignore
+    setResrictedCount
+) => {
     useEffect(() => {
         const handleMouseMove = (event: MouseEvent) => {
             const { screenY } = event; // Get the Y coordinate of the mouse relative to the screen
@@ -9,10 +14,12 @@ const useMouseTracker = (threshold = 50, testIsGoing: boolean) => {
             // If the mouse reaches the taskbar (within the defined threshold), trigger an alert
             if (screenY <= 130) {
                 console.log("Mouse reached upper!");
-                alert("Mouse reached Upper!");
+                //@ts-ignore
+                setResrictedCount((prev) => prev + 1);
             } else if (screenY >= screenHeight - threshold) {
                 console.log("Mouse reached taskbar!");
-                alert("Mouse reached taskbar!");
+                //@ts-ignore
+                setResrictedCount((prev) => prev + 1);
             }
         };
 

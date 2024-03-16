@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-
-const useTabTracker = () => {
+// @ts-ignore
+const useTabTracker = (setResrictedCount) => {
     useEffect(() => {
         const handleTabSwitch = (event: BeforeUnloadEvent) => {
             // Cancel the event to prevent the tab switch

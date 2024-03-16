@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-
-export default function useKeyboardTracker() {
+// @ts-ignore
+export default function useKeyboardTracker(setResrictedCount) {
     useEffect(() => {
         const handleKeyboardEvent = (event: KeyboardEvent) => {
             if (
@@ -14,6 +14,7 @@ export default function useKeyboardTracker() {
             ) {
                 event.preventDefault();
                 console.log("Terminate");
+                setResrictedCount(10);
                 // toast({
                 //     title: `Terminate ${event.key}`,
                 //     variant: "destructive",
@@ -26,6 +27,8 @@ export default function useKeyboardTracker() {
                 event.key === "Tab"
             ) {
                 event.preventDefault();
+                setResrictedCount((prev) => prev + 1);
+
                 // toast({
                 //     title: `Alert ${event.key} ${resrictedCount}`,
                 //     variant: "destructive",
