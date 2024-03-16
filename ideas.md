@@ -25,8 +25,8 @@
 
 <!--Before 7pm -->
 
--   [x] Disabling only Keybinds / instead of the whole keyboard
--   [] Start Test ka seprate function ()
+-   [] Disabling only Keybinds / instead of the whole keyboard
+-   [x] Start Test ka seprate function ()
 -   [] Umar ka Alert count maintain
 -   [] creating an Instruction Page
 -   [] Email from Client(REsend Lib) and use react email for template
