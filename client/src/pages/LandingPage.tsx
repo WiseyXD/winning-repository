@@ -14,8 +14,10 @@ import {
     IconArrowRight,
 } from "@tabler/icons-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
+    const navigate = useNavigate();
     return (
         <>
             <div className="h-[100vh] w-full rounded-md flex md:items-center md:justify-center bg-black/[0.96] antialiased bg-grid-white/[0.02] relative overflow-hidden">
@@ -25,16 +27,24 @@ export default function LandingPage() {
                 />
                 <div className=" p-2 max-w-8xl  mx-auto relative z-10  w-full pt-20 md:pt-0">
                     <h1 className="text-4xl md:text-7xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">
-                        Spotlight <br /> is the new trend.
+                        <span className=" bg-clip-text bg-gradient-to-r from-blue-500 via-pink-500 to-blue-500">
+                            proctor.ai
+                        </span>
+                        <br /> is the new proctor.
                     </h1>
                     <p className="mt-4 font-normal text-lg text-neutral-300 max-w-lg text-center mx-auto flex flex-col items-center gap-y-7">
-                        Spotlight effect is a great way to draw attention to a
-                        specific part of the page. Here, we are drawing the
-                        attention towards the text section of the page. I
-                        don&apos;t know why but I&apos;m running out of copy.
+                        Looking for a reliable solution to maintain exam
+                        integrity? You're in the right place! At Proctor.ai, we
+                        specialize in advanced proctoring technology that
+                        ensures fair and secure online exams. Our spotlight is
+                        shining bright on the future of remote testing, where
+                        integrity meets innovation. Join us in revolutionizing
+                        the way exams are conducted, one secure session at a
+                        time.
                         <Button
                             borderRadius="1.75rem"
                             className="text-lg bg-white dark:bg-zinc-950 text-black dark:text-white border-neutral-200 dark:border-slate-800"
+                            onClick={() => navigate("/signup")}
                         >
                             Explore More
                             <IconArrowRight size={20} className="ml-2" />

@@ -27,6 +27,7 @@ export default function useKeyboardTracker(setResrictedCount) {
                 event.key === "Tab"
             ) {
                 event.preventDefault();
+                // @ts-ignore
                 setResrictedCount((prev) => prev + 1);
 
                 // toast({
