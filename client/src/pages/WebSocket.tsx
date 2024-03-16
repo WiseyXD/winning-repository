@@ -111,12 +111,12 @@ const WebSocketClient: React.FC = () => {
         // Event listener for connection close
         ws.onclose = () => {
             console.log("Disconnected from WebSocket server 1");
-            setSocket(null);
+            // setSocket(null);
         };
 
         ws2.onclose = () => {
             console.log("Disconnected from WebSocket server 2");
-            setSocket2(null);
+            // setSocket2(null);
         };
 
         // Cleanup function
