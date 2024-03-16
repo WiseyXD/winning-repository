@@ -6,6 +6,8 @@ type TestPreviewProps = {
     wrongQuestions: string[];
 };
 
+// Winning Day
+
 export default function TestPreview({
     test,
     finalScore,
