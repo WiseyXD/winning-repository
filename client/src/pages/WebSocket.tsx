@@ -25,6 +25,8 @@ import {
     resetWrongQuestions,
     setTestScore,
 } from "@/features/testScore/testScoreSlice";
+import useMouseTracker from "@/hooks/useMouseTracker";
+import useKeyboardTracker from "@/hooks/useKeyboardTracker";
 
 const WebSocketClient: React.FC = () => {
     const isAuthorized = useSelector(
@@ -47,7 +49,10 @@ const WebSocketClient: React.FC = () => {
     const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
     const [testIsGoing, setTestIsGoing] = useState(false);
     const [time, setTime] = useState(1 * 60);
-    const [score, setScore] = useState(0);
+    const [resrictedCount, setResrictedCount] = useState(0);
+
+    const isMouseNear = useMouseTracker(undefined, testIsGoing);
+    const isWrongKeyPressed = useKeyboardTracker();
 
     const elementRef = useRef(null);
 
@@ -55,11 +60,19 @@ const WebSocketClient: React.FC = () => {
         if (elementRef.current) {
             if (document.fullscreenElement) {
                 document.exitFullscreen();
+                console.log("Fullscreen out");
+                handleSubmitTest();
+                document.removeEventListener(
+                    "keydown",
+                    handleFullscreenKeyBlock
+                );
             } else {
                 // @ts-ignore
                 elementRef.current.requestFullscreen().catch((err) => {
                     console.error("Failed to enter fullscreen mode:", err);
                 });
+                document.addEventListener("keydown", handleFullscreenKeyBlock);
+                window.addEventListener("keydown", checkEscacpe);
             }
         }
     };
@@ -94,6 +107,7 @@ const WebSocketClient: React.FC = () => {
             if (ws.readyState === WebSocket.OPEN) {
                 ws.close();
             }
+            document.removeEventListener("keydown", handleFullscreenKeyBlock);
         };
     }, []);
 
@@ -140,12 +154,61 @@ const WebSocketClient: React.FC = () => {
         }
     }
 
-    async function handleStartTest() {
+    function handleFullscreenKeyBlock(event: KeyboardEvent) {
+        if (
+            event.key === "Enter" ||
+            event.key === "Control" ||
+            event.key === "Alt" ||
+            event.key === "F11" ||
+            event.key === "Tab" ||
+            event.key === "Meta"
+        ) {
+            event.preventDefault();
+            console.log("Terminate");
+            toast({
+                title: `Terminate ${event.key}`,
+                variant: "destructive",
+            });
+            handleSubmitTest();
+            // Prevent default action for specified keys
+        } else if (
+            event.key === "c" ||
+            event.key === "v" ||
+            event.key === "Tab"
+        ) {
+            event.preventDefault();
+            toast({
+                title: `Alert ${event.key} ${resrictedCount}`,
+                variant: "destructive",
+            });
+            console.log("Alert" + resrictedCount);
+            if (resrictedCount > 3) handleSubmitTest();
+            setResrictedCount((prev) => prev + 1);
+        } else if (event.key === "Escape" && document.fullscreenElement) {
+            event.preventDefault();
+            console.log("Esc prevented");
+        }
+    }
+
+    function checkEscacpe(e: KeyboardEvent) {
+        if (e.key === "Escape") {
+            e.preventDefault();
+            console.log("Escape");
+        }
+    }
+
+    async function handleStartTest(e: any) {
         setTestIsGoing(true);
-        handleFullScreen();
+        // handleFullScreen();
+        handleFullscreenKeyBlock(e);
         sendMessage();
         dispatch(resetScore());
         dispatch(resetWrongQuestions());
+    }
+
+    async function handleSubmitTest() {
+        setTestIsGoing(false);
+        navigate(`/${testId}/submit`);
     }
 
     return (
@@ -219,14 +282,7 @@ const WebSocketClient: React.FC = () => {
                                         </PaginationItem>
                                         {questionNo ===
                                         test.questions.length - 1 ? (
-                                            <Button
-                                                onClick={() => {
-                                                    setTestIsGoing(false);
-                                                    navigate(
-                                                        `/${testId}/submit`
-                                                    );
-                                                }}
-                                            >
+                                            <Button onClick={handleSubmitTest}>
                                                 Submit
                                             </Button>
                                         ) : (
@@ -253,7 +309,7 @@ const WebSocketClient: React.FC = () => {
                         </Card>
                     </div>
                 ) : (
-                    <Button onClick={() => handleStartTest()}>
+                    <Button onClick={(e) => handleStartTest(e)}>
                         Start Test
                     </Button>
                 )}
