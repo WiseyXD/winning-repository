@@ -253,7 +253,9 @@ const WebSocketClient: React.FC = () => {
                         </Card>
                     </div>
                 ) : (
-                    <Button onClick={() => handleStartTest}>Start Test</Button>
+                    <Button onClick={() => handleStartTest()}>
+                        Start Test
+                    </Button>
                 )}
             </div>
             <div>
