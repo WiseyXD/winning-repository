@@ -73,8 +73,8 @@ const WebSocketClient: React.FC = () => {
     const elementRef = useRef(null);
 
     useEffect(() => {
-        const ws = new WebSocket("ws://localhost:8080");
-        const ws2 = new WebSocket("ws://localhost:8082");
+        const ws = new WebSocket("ws://127.0.0.1:8000/ws/");
+        const ws2 = new WebSocket("ws://127.0.0.1:7000/ws/");
 
         // WebSocket server address
 
@@ -92,20 +92,20 @@ const WebSocketClient: React.FC = () => {
         // Event listener for receiving messages
         ws.onmessage = (event: MessageEvent) => {
             const newMessage: string = event.data;
-            setReceivedMessages((prevMessages) => [
-                ...prevMessages,
-                newMessage,
-            ]);
-            console.log(receivedMessages + "video");
+            if (newMessage === "alert") {
+                setResrictedCount((prev) => prev + 1);
+            }
+            // setReceivedMessages((prevMessages) => [...prevMessages, newMessage]);
+            // console.log(receivedMessages + "video");
         };
 
         ws2.onmessage = (event: MessageEvent) => {
             const newMessage: string = event.data;
-            setReceivedMessages((prevMessages) => [
-                ...prevMessages,
-                newMessage,
-            ]);
-            console.log(receivedMessages + "audio");
+            if (newMessage === "alert") {
+                setResrictedCount((prev) => prev + 1);
+            }
+            // setReceivedMessages((prevMessages) => [...prevMessages, newMessage]);
+            // console.log(receivedMessages + "audio");
         };
 
         // Event listener for connection close
@@ -140,6 +140,7 @@ const WebSocketClient: React.FC = () => {
         if (resrictedCount > 3) {
             handleSubmitTest();
             sendEmail();
+            if (sendIntervalId) clearInterval(sendIntervalId);
         }
     }, [resrictedCount]);
 
