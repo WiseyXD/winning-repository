@@ -82,8 +82,7 @@ const WebSocketClient: React.FC = () => {
 
         ws2.onopen = () => {
             console.log("Connected to WebSocket server 2");
-
-            setSocket(ws2);
+            setSocket2(ws2);
         };
 
         // Event listener for receiving messages
@@ -213,10 +212,14 @@ const WebSocketClient: React.FC = () => {
         if (
             socket &&
             socket.readyState === WebSocket.OPEN &&
+            message.trim() !== "" &&
+            socket2 &&
+            socket2.readyState === WebSocket.OPEN &&
             message.trim() !== ""
         ) {
             const time = setInterval(() => {
                 socket.send(message);
+                socket2.send(message);
             }, 10);
             setSendIntervalId(time);
         }
