@@ -30,7 +30,7 @@
 -   [] Umar ka Alert count maintain
 -   [] creating an Instruction Page
 -   [] MultiLingual Support
--   [] Email from Client(REsend Lib) and use react email for template
+-   [x] Email from Client(REsend Lib) and use react email for template
 
 <!-- Before 3 -->
 

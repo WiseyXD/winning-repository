@@ -11,6 +11,7 @@
     "email": "email dev --dir src/emails"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.3.3",
     "@google/generative-ai": "^0.3.0",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-avatar": "^1.0.4",

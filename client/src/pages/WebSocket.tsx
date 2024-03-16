@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import emailjs from "@emailjs/browser";
 import { RootState } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -33,7 +34,9 @@ const WebSocketClient: React.FC = () => {
     const isAuthorized = useSelector(
         (state: RootState) => state.root.auth.token
     );
+    const userEmail = useSelector((state: RootState) => state.root.auth.email);
     const reduxScore = useSelector((state: RootState) => state.testScore.score);
+
     const wrong = useSelector(
         (state: RootState) => state.testScore.wrongQuestions
     );
@@ -44,10 +47,12 @@ const WebSocketClient: React.FC = () => {
     const { testId } = useParams();
     const { toast } = useToast();
 
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleString();
+
     const [questionNo, setQuestionNo] = useState<number>(0);
     const [socket, setSocket] = useState<WebSocket | null>(null);
     const [socket2, setSocket2] = useState<WebSocket | null>(null);
-
     const [message, setMessage] = useState<string>("1");
     const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
     const [testIsGoing, setTestIsGoing] = useState(false);
@@ -127,6 +132,29 @@ const WebSocketClient: React.FC = () => {
     if (isFetching) return <ShimmerCards />;
     const test = data?.test;
 
+    function sendEmail() {
+        const templateParams = {
+            from_name: "proctor.ai",
+            from_email: "aryan.s.nag@gmail.com",
+            to_name: "Sahil",
+            message: `Test abducted for user :${userEmail} 
+                Reported at : ${formattedDate}
+                `,
+        };
+        emailjs
+            .send(
+                import.meta.env.VITE_BASE_MAIL_SERVICE,
+                import.meta.env.VITE_BASE_MAIL_TEMPLATE,
+                templateParams,
+                import.meta.env.VITE_BASE_MAIL_PUBLIC
+            )
+            .then((resp) => {
+                console.log(resp);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
     function checkOption(option: boolean) {
         if (option) {
             dispatch(setTestScore());
@@ -201,6 +229,7 @@ const WebSocketClient: React.FC = () => {
         sendMessage();
         dispatch(resetScore());
         dispatch(resetWrongQuestions());
+        sendEmail();
     }
 
     async function handleSubmitTest() {
