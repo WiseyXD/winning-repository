@@ -341,11 +341,6 @@ const WebSocketClient: React.FC = () => {
                     </Button>
                 )}
             </div>
-            <div>
-                {wrong.map((wr) => {
-                    return <h1 key={wr}>{wr}</h1>;
-                })}
-            </div>
         </div>
     );
 };

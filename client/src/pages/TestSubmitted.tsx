@@ -32,7 +32,7 @@ export default function TestSubmitted() {
             <Navbar isAuthorized={isAuthorized} />
             <Separator />
             <div className="max-w-[90%] w-full mx-auto mt-4 max-h-screen">
-                <Tabs defaultValue="account" className="w-[400px]">
+                <Tabs defaultValue="overview" className="w-full ">
                     <TabsList>
                         <TabsTrigger value="overview">
                             Test Overview
