@@ -1,5 +1,11 @@
 import React from "react";
 import { Separator } from "./ui/separator";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
 
 type TestPreviewProps = {
     test: any;
@@ -32,6 +38,10 @@ export default function TestPreview({
                 </div>
                 <div>
                     <p className="text-neutral-300">Duration: {duration}</p>
+                </div>
+
+                <div>
+                    <p className="text-neutral-300">Your Score: {finalScore}</p>
                 </div>
             </div>
 
@@ -67,6 +77,19 @@ export default function TestPreview({
                                     );
                                 })}
                             </ul>
+                            {wrongQuestions.includes(question.text) && (
+                                <Accordion type="single" collapsible>
+                                    <AccordionItem value="item-1">
+                                        <AccordionTrigger>
+                                            How can i Improve
+                                        </AccordionTrigger>
+                                        <AccordionContent>
+                                            Yes. It adheres to the WAI-ARIA
+                                            design pattern.
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                </Accordion>
+                            )}
                         </div>
                     );
                 })}
