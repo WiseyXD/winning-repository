@@ -125,19 +125,41 @@ adminRouter.delete("/tests/delete/:quizId", async (c, next) => {
     }).$extends(withAccelerate());
     try {
         const quizId = c.req.param("quizId");
+        const questions = await prisma.question.findMany({
+            where: {
+                quizId: quizId,
+            },
+        });
 
-        const quiz = await prisma.quiz.delete({
+        // Iterate over each question and delete its options
+        for (const question of questions) {
+            await prisma.option.deleteMany({
+                where: {
+                    questionId: question.id,
+                },
+            });
+        }
+
+        // Delete questions associated with the quiz
+        await prisma.question.deleteMany({
+            where: {
+                quizId: quizId,
+            },
+        });
+
+        // Delete the quiz itself
+        const deletedQuiz = await prisma.quiz.delete({
             where: {
                 id: quizId,
             },
         });
+        // await prisma.option.deleteMany();
+        // await prisma.quiz.deleteMany();
 
-        await prisma.option.deleteMany();
-        await prisma.quiz.deleteMany();
-
-        return c.json({ msg: "success", quiz }, 200);
+        return c.json({ msg: "success", deletedQuiz }, 200);
     } catch (error: any) {
         const message = error.message;
+        console.log(message);
         return c.json({ msg: "fails", message }, 500);
     }
 });

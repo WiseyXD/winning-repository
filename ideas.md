@@ -4,9 +4,9 @@
 -   [] Exam Duration
 -   [] Exam Scehduling and Power to Cancel Exam any time
 -   [] Generate detailed reports after exams for analysis and action.
--   [] Wrong ans can be send to Gemini and response where a student is lacking and needs to work can be generated
--   [] Submitted Test must be saved in DB and Should be reflected on Admin Panel
--   [] Mail Service for malpractice recorded
+-   [x] Wrong ans can be send to Gemini and response where a student is lacking and needs to work can be generated
+-   [x] Submitted Test must be saved in DB and Should be reflected on Admin Panel
+-   [x] Mail Service for malpractice recorded
 
 # Buisness Idea :-
 
