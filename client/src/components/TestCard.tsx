@@ -10,6 +10,11 @@ import {
 } from "@/components/ui/card";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
+import { useDeleteTestMutation } from "@/app/api/admin/adminTestApi";
+import ShimmerCards from "./ShimmerCards";
+import { useToast } from "./ui/use-toast";
 
 type TestCardProps = {
     title: string;
@@ -28,13 +33,24 @@ export default function TestCard({
 
     testId,
 }: TestCardProps) {
+    const isAdmin = useSelector((state: RootState) => state.root.auth.admin);
     const navigate = useNavigate();
+    const { toast } = useToast();
+    const [deleteTest] = useDeleteTestMutation();
+
+    async function handleDelete(id: string) {
+        // @ts-ignore
+        const { data, isFetching } = await deleteTest(id);
+        if (isFetching) return <ShimmerCards />;
+        console.log(data);
+        toast({
+            title: "Test Delete",
+            variant: "destructive",
+        });
+    }
+
     return (
-        <Card
-            className="w-[350px]"
-            role="button"
-            onClick={() => navigate(`/${testId}`)}
-        >
+        <Card className="w-[350px]">
             <CardHeader>
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>
@@ -54,9 +70,22 @@ export default function TestCard({
                     </div>
                 </div>
             </CardContent>
-            <CardFooter className="flex justify-end">
-                <Button>Give </Button>
-            </CardFooter>
+            {isAdmin ? (
+                <CardFooter className="flex justify-end">
+                    <Button
+                        onClick={() => handleDelete(testId)}
+                        variant={"destructive"}
+                    >
+                        Delete{" "}
+                    </Button>
+                </CardFooter>
+            ) : (
+                <CardFooter className="flex justify-end">
+                    <Button onClick={() => navigate(`/${testId}`)}>
+                        Give{" "}
+                    </Button>
+                </CardFooter>
+            )}
         </Card>
     );
 }

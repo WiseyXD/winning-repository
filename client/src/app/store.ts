@@ -7,6 +7,7 @@ import dashboardReducer from "@/features/dashboardSlice/dashboardSlice";
 import { authApi } from "./api/authApi";
 import { testApi } from "./api/student/testApi";
 import testScoreReducer from "@/features/testScore/testScoreSlice";
+import { adminTestApi } from "./api/admin/adminTestApi";
 
 const store = configureStore({
     reducer: {
@@ -16,9 +17,14 @@ const store = configureStore({
         testScore: testScoreReducer,
         [authApi.reducerPath]: authApi.reducer,
         [testApi.reducerPath]: testApi.reducer,
+        [adminTestApi.reducerPath]: adminTestApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(authApi.middleware, testApi.middleware),
+        getDefaultMiddleware().concat(
+            authApi.middleware,
+            testApi.middleware,
+            adminTestApi.middleware
+        ),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
