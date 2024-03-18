@@ -9,6 +9,9 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Home() {
+    const isAuthorized = useSelector(
+        (state: RootState) => state.root.auth.token
+    );
     const dispatch = useDispatch();
     const componentToRender = useSelector(
         (state: RootState) => state.dashboard.component
@@ -19,7 +22,7 @@ export default function Home() {
 
     return (
         <>
-            <Navbar isAuthorized={"true"} />
+            <Navbar isAuthorized={isAuthorized} />
             <Separator />
 
             <div className="min-h-[94vh] flex ">
